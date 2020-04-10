@@ -1,18 +1,23 @@
 debug = true
-logLevel = "INFO"
-
 defaultEntryPoints = ["https", "http"]
 
 [entryPoints]
   [entryPoints.http]
     address = ":80"
+  [entryPoints.http.http]
+    [entryPoints.http.http.redirections]
+      [entryPoints.http.http.redirections.entryPoint]
+        to = "https"
+        scheme = "https"
+
   [entryPoints.https]
     address = ":443"
+
 
 [certificatesResolvers.myresolver.acme]
   caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
   email = "zoran.antolovic.os@gmail.com"
-  storage = "acme.json"
+  storage = "/opt/data/acme.json"
   [certificatesResolvers.myresolver.acme.httpChallenge]
     entryPoint = "http"
 
@@ -20,7 +25,7 @@ defaultEntryPoints = ["https", "http"]
   endpoint = "unix:///var/run/docker.sock"
   watch = true
   exposedByDefault = false
-  network = "proxy"
+  network = "traefik_traefik"
 
 [api]
   insecure = true
@@ -28,3 +33,7 @@ defaultEntryPoints = ["https", "http"]
   debug = true
 
 [retry]
+
+[log]
+  level = "INFO"
+  
